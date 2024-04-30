@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Lab9</title>
+</head>
+<body>
+    <div id="username-form">
+        <span>Username</span>
+        <input type="text" id="username-input">
+        <button id="username-btn">Connect</button>
+    </div>
+
+    <div id="chat" style="display: none;">
+        <ul id="chat-msg"></ul>
+        <div id="chat-form">
+            <input type="text" id="chat-input">
+            <button id="chat-btn">Submit</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io()
+        document.getElementById('username-btn').addEventListener('click', () => {
+            const usernameInput = document.getElementById('username-input')
+            if(usernameInput.length !== 0) {
+                const currentUsername = usernameInput.value
+                document.getElementById('username-form').style = 'display:none;'
+                document.getElementById('chat').style = 'display:block;'
+
+                
+                const chatInput = document.getElementById('chat-input')
+
+                document.getElementById('chat-btn').addEventListener('click', () => {
+                    if(chatInput.value) {
+                        socket.emit('chat msg', {username: currentUsername, msg: chatInput.value})
+                        chatInput.value = ''
+                    }
+                })
+
+                const msgList = document.getElementById('chat-msg')
+                socket.on('chat msg', (payload) => {
+                    const item = document.createElement('li')
+                    item.textContent = `${payload.username} : ${payload.msg}`
+                    msgList.appendChild(item)
+                })
+            }
+        })
+    </script>
+</body>
+</html>

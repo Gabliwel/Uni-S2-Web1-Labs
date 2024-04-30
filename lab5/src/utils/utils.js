@@ -1,0 +1,1 @@
+export const ENDPOINT = 'https://glo3102lab4.herokuapp.com'

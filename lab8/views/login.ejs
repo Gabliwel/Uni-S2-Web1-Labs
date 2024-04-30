@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab8</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script>
+        const login = async () => {
+            let username = document.getElementById('usernameInput').value
+            let password = document.getElementById('passwordInput').value
+            
+            const response = await fetch('/login', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username:username, password: password}),
+                method: 'POST'
+            })
+
+            if(response.ok) {
+                const data = await response.json()
+                console.log(data)
+                Cookies.set('USER_COOKIE', data.token)
+                window.location.replace('/profile')
+            } else {
+                document.getElementById('status').textContent = "Error(" + response.status.toString() + ")"
+            }
+        }
+        const signup = () => {
+            window.location.replace('/signup')
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <h1>Login Page</h1>
+        <div>
+            <label>Username</label>
+            <input id="usernameInput">
+        </div> 
+        <div>
+            <label>Password</label>
+            <input id="passwordInput" type="password">
+        </div>
+        <button onclick="login()">Login</button>
+        <button onclick="signup()">Create user</button>
+        <br>
+        <p id="status" style="color: red;"></p>
+    </div>
+</body>
